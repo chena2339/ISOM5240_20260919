@@ -7,7 +7,7 @@ st.set_page_config(page_title="Story Generator", page_icon="📜", layout="cente
 st.title("📜 AI Story Generator")
 st.write("Generate creative text using Hugging Face's `distilgpt2` model.")
 
-# Load generator directly without caching
+# Load generator directly
 with st.spinner("Loading model..."):
     generator = pipeline("text-generation", model="distilbert/distilgpt2")
 
@@ -34,7 +34,7 @@ with st.form("story_form"):
     prompt = st.text_area(
         "Enter your prompt:", 
         value="Once upon a time in a land far, far away",
-        rows=3
+        height=100  # 修正：将 rows=3 改为 height=100
     )
     submit_button = st.form_submit_button("Generate Story")
 
