@@ -1,18 +1,30 @@
 import streamlit as st
 from transformers import pipeline
 
+# Model Definition
+MODEL_NAME = "distilbert/distilgpt2"
+
 # Page Configuration
 st.set_page_config(page_title="Story Generator", page_icon="📜", layout="centered")
 
 st.title("📜 AI Story Generator")
-st.write("Generate creative text using Hugging Face's `distilgpt2` model.")
+st.write(f"Generate creative text using Hugging Face's `{MODEL_NAME}` model.")
 
-# Load generator directly
+# Function to load and initialize the text generation model
+def load_model(model_name: str):
+    """Initializes and returns a Hugging Face text generation pipeline."""
+    return pipeline("text-generation", model=model_name)
+
+# Load the generator using the function
 with st.spinner("Loading model..."):
-    generator = pipeline("text-generation", model="distilbert/distilgpt2")
+    generator = load_model(MODEL_NAME)
 
 # Sidebar options
 st.sidebar.header("Generation Options")
+
+# Display current model details in sidebar
+st.sidebar.info(f"**Active Model:**\n`{MODEL_NAME}`")
+
 max_new_tokens = st.sidebar.slider(
     "Max New Tokens", 
     min_value=20, 
@@ -34,7 +46,7 @@ with st.form("story_form"):
     prompt = st.text_area(
         "Enter your prompt:", 
         value="Once upon a time in a land far, far away",
-        height=100  # 修正：将 rows=3 改为 height=100
+        height=100
     )
     submit_button = st.form_submit_button("Generate Story")
 
@@ -57,3 +69,4 @@ if submit_button:
             if num_return_sequences > 1:
                 st.markdown(f"**Option {idx}:**")
             st.info(result["generated_text"])
+
